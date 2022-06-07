@@ -1,0 +1,47 @@
+FROM node:16-alpine as builder
+LABEL maintainer="MARKETPLACE-WEBAPP"
+LABEL description="This is the build stage for app. Here we generate static resource."
+
+# App directory
+WORKDIR /app
+
+# App dependencies
+COPY package.json package-lock.json ./
+RUN npm install --frozen-lockfile
+
+# Copy app source code & env
+COPY ./ ./
+
+# Generate static
+RUN npm run build:staging
+
+# ===== SECOND STAGE ======
+FROM node:16-alpine as pkg-builder
+LABEL maintainer="MARKETPLACE-WEBAPP"
+LABEL description="This is the 2nd stage: only install production packages."
+
+# App directory
+WORKDIR /app
+
+COPY --from=builder /app/package.json ./
+COPY --from=builder /app/package-lock.json ./
+RUN npm install --production --frozen-lockfile
+
+# ===== THIRD STAGE ======
+FROM node:16-alpine
+LABEL maintainer="MARKETPLACE-WEBAPP"
+LABEL description="This is the 3th stage: a very small image where we copy the static resource."
+
+# App directory
+WORKDIR /app
+
+# Copy static resource
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/next.config.js ./
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/package.json ./
+COPY --from=builder /app/package-lock.json ./
+COPY --from=pkg-builder /app/node_modules ./node_modules
+
+# Start server
+CMD ["npm", "start"]
