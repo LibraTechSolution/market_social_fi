@@ -1,0 +1,120 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  row-gap: 20px;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 20px 24px;
+
+  .title {
+    font: var(--font-heading-6);
+  }
+
+  .desc {
+    font: var(--font-heading-2);
+    text-align: center;
+    color: var(--gdf-grey-manatee);
+  }
+}
+
+.module-connect {
+  &.metamask-not-found .content {
+    height: 256px;
+    width: 328px;
+  }
+
+  &.init .content {
+    height: 296px;
+    width: 336px;
+  }
+
+  &.update-profile .content {
+    height: 396px;
+    width: 384px;
+  }
+
+  &.connecting-to-metamask .content {
+    height: 220px;
+    width: 328px;
+  }
+
+  &.error-connecting .content {
+    height: 240px;
+    width: 328px;
+  }
+
+  &.wrong-network .content {
+    height: 248px;
+    width: 328px;
+  }
+}
+
+.init-button {
+  filter: unset;
+  font-weight: 500 !important;
+  border-radius: 16px;
+  border: 1px solid #c7c7cc;
+  background: var(--gdf-white);
+  width: 100%;
+  height: 48px;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 20px;
+  padding-right: 20px;
+  margin-bottom: 0 !important;
+  font: var(--font-heading-4);
+
+  &:first-of-type {
+    margin-bottom: 24px;
+  }
+
+  .label {
+    margin-left: 0px;
+  }
+
+  &.active {
+    border: 1px solid #7265fd;
+    color: #7265fd;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 140%;
+  }
+}
+
+.install-metamask {
+}
+
+.download {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  column-gap: 8px;
+  color: var(--gdf-blue);
+  font: var(--font-heading-2);
+
+  span {
+    color: var(--gdf-purple-medium);
+  }
+
+  svg {
+    path {
+      fill: var(--gdf-purple-medium);
+    }
+  }
+}
+
+.dot-spinner {
+  animation: spinning 1500ms linear infinite;
+}
+
+@keyframes spinning {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

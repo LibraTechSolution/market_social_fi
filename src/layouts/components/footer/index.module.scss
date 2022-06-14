@@ -1,0 +1,46 @@
+.wrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  min-height: 237px;
+  background: var(--gdf-blue-whisper);
+  z-index: 10;
+}
+
+.inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  row-gap: 5px;
+  width: var(--gdf-default-container-width);
+}
+
+.logo {
+  a {
+    display: flex;
+    align-items: center;
+    column-gap: 12px;
+  }
+}
+
+.qrcode {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  row-gap: 12px;
+
+  svg + svg {
+    margin-left: 12px;
+  }
+}
+
+.social-network {
+  display: flex;
+  column-gap: 32px;
+}
+
+.w-empty {
+  min-width: 288px;
+}

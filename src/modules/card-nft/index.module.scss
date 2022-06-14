@@ -1,0 +1,132 @@
+.nft-item {
+  height: 500px;
+  border-radius: 32px;
+  border: 1px solid var(--gdf-blue-ghost);
+  background-color: var(--gdf-white);
+  overflow: hidden;
+  position: relative;
+}
+
+.heart-icon {
+  background-color: red;
+  position: absolute;
+  right: 25px;
+  top: 45px;
+  border: 1px solid var(--gdf-white);
+  transform: translateY(-50%) rotate(45deg);
+  background: var(--gdf-purple-heliotrope);
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+  overflow: hidden;
+  z-index: 1;
+
+  .heart-block {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    position: relative;
+
+    svg {
+      position: absolute;
+      transform: rotate(-45deg);
+    }
+  }
+}
+
+.nft-img {
+  display: flex;
+  flex-shrink: 0;
+  flex-direction: column;
+  flex-basis: auto;
+  align-items: stretch;
+  width: 100%;
+  height: 341px;
+  overflow: hidden;
+  position: relative;
+
+  & span {
+    width: 100%;
+    height: 100% !important;
+  }
+
+  & img {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    object-fit: cover;
+    object-position: center center;
+  }
+}
+
+.nft-info {
+  display: flex;
+  flex-direction: row;
+  position: absolute;
+  width: 206px;
+  height: 40px;
+  top: calc(341px - 20px);
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 99px;
+  background: linear-gradient(63.3deg, var(--gdf-purple-heart) 7.52%, var(--gdf-pink-heliotrope) 92.35%);
+  box-shadow: 0px 2px 5px var(--gdf-purple-logan);
+
+  div + div {
+    position: relative;
+
+    &::after {
+      content: '';
+      width: 1px;
+      height: 16px;
+      left: calc(1px / 2);
+      opacity: 0.3;
+      background: var(--gdf-white);
+      position: absolute;
+    }
+  }
+
+  .nft-total {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    column-gap: 5px;
+    flex-basis: 50%;
+    color: var(--gdf-white);
+    font: var(--font-heading-2);
+  }
+}
+
+.nft-content {
+  display: flex;
+  flex-direction: column;
+  row-gap: 12px;
+  width: 100%;
+  padding: 0 28px;
+  margin-top: 50px;
+
+  & > p {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    font: var(--font-heading-6);
+  }
+
+  .nft-price {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    & > p:first-child {
+      color: var(--gdf-blue);
+      font: var(--font-heading-5);
+    }
+
+    & > p:last-child {
+      display: flex;
+      align-items: center;
+      column-gap: 6px;
+    }
+  }
+}

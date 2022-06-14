@@ -1,0 +1,12 @@
+.navbar {
+  display: flex;
+  flex-direction: row;
+  column-gap: 40px;
+
+  .navbar-item {
+    position: relative;
+    height: 96px;
+    line-height: 96px;
+    cursor: pointer;
+  }
+}
