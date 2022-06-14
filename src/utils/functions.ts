@@ -15,10 +15,9 @@ export const getFromLocalStorage = (key: string) => {
 };
 
 export const getWalletSupports = () => {
-  const userAgentString =
-    typeof window !== "undefined" ? navigator.userAgent : "";
+  const userAgentString = typeof window !== 'undefined' ? navigator.userAgent : '';
   if (/iPad|iPhone|iPod/i.test(userAgentString)) {
-    return ["metamask", "trust", "coin98"];
+    return ['metamask', 'trust', 'coin98'];
   }
 
   return undefined;
@@ -34,52 +33,50 @@ export const dotsSensitive = ({
   endPosition?: number;
 }) => {
   if (isEmpty(originalString)) {
-    return "";
+    return '';
   }
   return (
     originalString?.substring(0, Number(startPosition)) +
-    "..." +
-    originalString?.substring(
-      Number(endPosition),
-      Number(originalString?.length),
-    )
+    '...' +
+    originalString?.substring(Number(endPosition), Number(originalString?.length))
   );
 };
 
 export const isEmpty = (obj: any) => {
-  return (
-    [Object, Array].includes((obj || {}).constructor) &&
-    !Object.entries(obj || {}).length
-  );
+  return [Object, Array].includes((obj || {}).constructor) && !Object.entries(obj || {}).length;
 };
 
-export const omit = <Type extends object, Key extends keyof Type>(
-  obj: Type,
-  props: Key[],
-) => {
+export const omit = <Type extends object, Key extends keyof Type>(obj: Type, props: Key[]) => {
   obj = { ...obj };
   props.forEach((prop) => delete obj[prop]);
   return obj;
 };
 
-export const omitBy = (
-  obj: { [key: string]: any },
-  check: (val: any) => boolean,
-) => {
+export const omitBy = (obj: { [key: string]: any }, check: (val: any) => boolean) => {
   obj = { ...obj };
-  Object.entries(obj).forEach(
-    ([key, value]) => check(value) && delete obj[key],
-  );
+  Object.entries(obj).forEach(([key, value]) => check(value) && delete obj[key]);
   return obj;
 };
 
 export const parseJSON = <T>(jsonString: string | null): T | undefined => {
   try {
-    return jsonString === "undefined"
-      ? undefined
-      : JSON.parse(jsonString ?? "");
+    return jsonString === 'undefined' ? undefined : JSON.parse(jsonString ?? '');
   } catch (error) {
-    console.log("Parsing error on ", { jsonString });
+    console.log('Parsing error on ', { jsonString });
     return undefined;
   }
+};
+
+export const pixelToRem = (...values: number[]) => {
+  return values.reduce((acc, current) => (acc += current / 16 + `rem `), '').trim();
+};
+
+export const reload = () => {
+  window?.location?.reload?.();
+};
+
+export const delay = (timeout: number) => {
+  return new Promise((resolve) => {
+    setTimeout(resolve, timeout);
+  });
 };

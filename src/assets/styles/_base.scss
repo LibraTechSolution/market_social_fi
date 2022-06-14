@@ -1,0 +1,49 @@
+@import 'reset';
+
+@font-face {
+  font-family: 'Sen';
+  src: url('../fonts/Sen.ttf');
+}
+body {
+  -webkit-font-smoothing: antialiased;
+  background-color: var(--background);
+  color: var(--text);
+  font: var(--font-heading-4);
+  min-width: 375px;
+  scroll-behavior: smooth;
+}
+
+:root {
+  /* Colors */
+  --gdf-blue: #4b9eff;
+  --gdf-blue-charade: #292938;
+  --gdf-blue-ghost: #c6c6d7;
+  --gdf-blue-whisper: #eaeaf5;
+  --gdf-pink-heliotrope: #e735eb;
+  --gdf-grey-manatee: #9595a9;
+  --gdf-grey-mid: #5e5e70;
+  --gdf-purple-heart: #8423d0;
+  --gdf-purple-heliotrope: #bd80f4;
+  --gdf-purple-lavender: #b173ea;
+  --gdf-purple-logan: #aa9cc4;
+  --gdf-purple-medium: #7b47e1;
+  --gdf-red: #ff3737;
+  --gdf-white: #ffffff;
+  --gdf-yellow: #fcca19;
+  --text: #292938;
+  --background: #f9f7ff;
+
+  /* Fonts */
+  --font-heading-1: 400 14px/20px 'Sen';
+  --font-heading-2: 400 16px/24px 'Sen';
+  --font-heading-3: 700 16px/24px 'Sen';
+  --font-heading-4: 400 18px/24px 'Sen';
+  --font-heading-5: 700 18px/24px 'Sen';
+  --font-heading-6: 700 24px/32px 'Sen';
+  --font-heading-7: 700 34px/48px 'Sen';
+  --font-heading-8: 700 48px/65px 'Sen';
+
+  /* Default Layout */
+  --gdf-default-container-width: 1432px;
+  --gdf-default-layout-header-height: 96px;
+}

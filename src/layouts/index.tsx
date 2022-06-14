@@ -1,21 +1,30 @@
-import { ReactNode } from "react";
-import NavbarUser from "./components/navbar";
-import FooterUser from "./components/footer";
-import Styled from "./index.styles";
+import { ReactNode, useState } from 'react';
+import useWeb3 from 'hooks/useWeb3';
+import Header from './components/header';
+import Footer from './components/footer';
+import classNames from 'classnames/bind';
+import styles from './index.module.scss';
+import { ConnectWalletSteps, PersonalInfo } from 'utils/interfaces';
+import BackgroundBannerCard from 'assets/images/background-banner.svg';
+
+const cx = classNames.bind(styles);
 
 interface Props {
   children?: ReactNode;
 }
 
-const Layout = ({
-  children,
-}: Props) => {
+const Layout = ({ children }: Props) => {
   return (
-    <Styled.Wrapper id="onTop">
-      <NavbarUser />
-      <Styled.Container>{children}</Styled.Container>
-      <FooterUser />
-    </Styled.Wrapper>
+    <div className="gdf-wrapper">
+      <Header />
+      <main className={cx('wrapper')}>
+        <div className={cx('inner')}>
+          <BackgroundBannerCard />
+          <section className={cx('content')}>{children}</section>
+        </div>
+      </main>
+      <Footer />
+    </div>
   );
 };
 

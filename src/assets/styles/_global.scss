@@ -1,0 +1,67 @@
+.gdf-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+
+.gdf-container {
+  display: flex;
+  width: var(--gdf-default-container-width);
+  max-width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+.gdf-content {
+  flex: 1;
+}
+
+.gdf-heading-1 {
+  font: var(--font-heading-1);
+}
+
+.gdf-heading-2 {
+  font: var(--font-heading-2);
+}
+
+.gdf-heading-3 {
+  font: var(--font-heading-3);
+}
+
+.gdf-heading-4 {
+  font: var(--font-heading-4);
+}
+
+.gdf-heading-5 {
+  font: var(--font-heading-5);
+}
+
+.gdf-heading-6 {
+  font: var(--font-heading-6);
+}
+
+.gdf-heading-7 {
+  font: var(--font-heading-7);
+}
+
+.gdf-heading-8 {
+  font: var(--font-heading-8);
+}
+
+.gdf-flex-center {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.gdf-title {
+  font: var(--font-heading-6);
+}
+
+.gdf-desc {
+  font: var(--font-heading-2);
+  text-align: center;
+  color: var(--gdf-grey-manatee);
+}

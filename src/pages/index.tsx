@@ -1,11 +1,7 @@
-import type { NextPage } from 'next';
+import { NextPageWithLayout } from 'utils/interfaces';
 
-const Home: NextPage = () => {
-  return (
-    <>
-      <h1>MARKETPLACE WEBAPP</h1>
-    </>
-  )
-}
+const Home: NextPageWithLayout = () => {
+  return <h1>MARKETPLACE WEBAPP</h1>;
+};
 
-export default Home
+export default Home;
