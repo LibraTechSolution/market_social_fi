@@ -1,0 +1,36 @@
+name: Docker Image CI 
+
+on: #[workflow_dispatch] 
+  push: 
+    branches: [master, test/deploy]
+jobs: 
+  build: 
+    runs-on: ubuntu-latest
+    steps: 
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with: 
+          node-version: 16
+      - uses: actions/checkout@v3 
+      - name: Docker hub login
+        env: 
+          DOCKER_HUB_USERNAME: ${{secrets.DOCKER_HUB_USERNAME}}
+          DOCKER_HUB_ACCESS_TOKEN: ${{secrets.DOCKER_HUB_ACCESS_TOKEN}}
+        run: docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_ACCESS_TOKEN
+      - name: Build the Docker image
+        run: docker build . --file .docker/Dockerfile.development --tag ${{secrets.DOCKER_HUB_USERNAME}}/go-dating-fi-marketplace-frontend:latest
+      - name: Push the docker image
+        run: docker push ${{secrets.DOCKER_HUB_USERNAME}}/go-dating-fi-marketplace-frontend:latest
+      - name: Executing remote ssh commands using password
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST_DEV }}
+          username: ${{ secrets.SSH_USERNAME_DEV }}
+          password: ${{ secrets.SSH_PASSWORD_DEV }}
+          port: ${{ secrets.SSH_PORT_DEV }}
+          script: |
+            cd /home/dev/docker
+            docker-compose -f docker-compose.market_place.dev.yml --compatibility down
+            docker-compose -f docker-compose.market_place.dev.yml --compatibility pull
+            docker-compose -f docker-compose.market_place.dev.yml --compatibility up -d
+      
