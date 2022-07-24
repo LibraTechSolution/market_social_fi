@@ -1,0 +1,51 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  row-gap: 20px;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 20px 24px;
+}
+
+.group-action {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  column-gap: 12px;
+  margin-top: 24px;
+
+  .btn-cancel {
+    width: 100%;
+    background-color: var(--gdf-white);
+    border: 1px solid var(--gdf-blue-ghost);
+
+    &:hover {
+      opacity: 0.6;
+      color: var(--gdf-white);
+      background-color: var(--gdf-grey-manatee);
+    }
+  }
+
+  .btn-proceed {
+    width: 100%;
+    background-color: var(--gdf-purple-medium);
+    color: var(--gdf-white);
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+}
+
+.quantity {
+  path {
+    fill: var(--gdf-purple-medium) !important;
+  }
+
+  input {
+    background: var(--gdf-blue-whisper);
+    color: var(--gdf-purple-medium);
+  }
+}

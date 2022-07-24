@@ -1,7 +1,7 @@
-import axios, { AxiosError } from "axios";
-import { getFromSession } from "utils/functions";
-import { PersonalInfo } from "utils/interfaces";
-import { ErrorResponse } from "./index.interface";
+import axios, { AxiosError } from 'axios';
+import { getFromSession } from 'utils/functions';
+import { PersonalInfo } from 'utils/interfaces';
+import { ErrorResponse } from './index.interface';
 
 export const requestWithJwt = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
@@ -22,13 +22,23 @@ export const geckoRequest = axios.create({
 });
 
 requestWithJwt.interceptors.request.use(async (config) => {
-  const personalInfo: PersonalInfo = getFromSession("personal-info");
+  const personalInfo: PersonalInfo = getFromSession('personal-info');
 
   return {
     ...config,
     headers: {
-      Authorization: `Bearer ${personalInfo?.tokens?.access.token || ""}`,
+      Authorization: `Bearer ${personalInfo?.tokens?.access.token || ''}`,
       ...config.headers,
+    },
+  };
+});
+
+requestWithoutJwt.interceptors.request.use(async (config) => {
+  return {
+    ...config,
+    headers: {
+      ...config.headers,
+      'Content-Type': 'application/json;charset=utf-8',
     },
   };
 });
@@ -40,13 +50,13 @@ requestWithJwt.interceptors.response.use(
   (error: AxiosError<ErrorResponse>) => {
     if (!error.response || !error.response?.data) {
       return Promise.reject({
-        code: "Unknown",
+        code: 'Unknown',
         errors: {
-          code: "Unknown",
-          message: "Server error",
+          code: 'Unknown',
+          message: 'Server error',
           status: 500,
         },
-        message: "Server error",
+        message: 'Server error',
       });
     }
     return Promise.reject({

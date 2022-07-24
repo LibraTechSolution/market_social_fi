@@ -1,18 +1,14 @@
-import { useCallback, useMemo, useRef, useEffect } from "react";
-import { MarketPlace } from "utils/interfaces";
-import { SC } from "utils/smart-contract";
-import mainnet from "utils/smart-contract/mainnet";
-import testnet from "utils/smart-contract/testnet";
-import Web3 from "web3";
-import WalletConnectProvider from "@walletconnect/web3-provider";
-import { getWalletSupports } from "utils/functions";
-import { Order, LazyMint } from "utils/order";
-import {
-  Types,
-  TypesMint721,
-  TypesMint1155,
-  createTypeData,
-} from "utils/sign/EIP712";
+import { useCallback, useMemo, useRef, useEffect } from 'react';
+import { MarketPlace } from 'utils/interfaces';
+import { SC } from 'utils/smart-contract';
+import mainnet from 'utils/smart-contract/mainnet';
+import testnet from 'utils/smart-contract/testnet';
+import Web3 from 'web3';
+import WalletConnectProvider from '@walletconnect/web3-provider';
+import { getWalletSupports } from 'utils/functions';
+import { Order, LazyMint } from 'utils/order';
+import { Types, TypesMint721, TypesMint1155, createTypeData } from 'utils/sign/EIP712';
+
 interface SignInProps {
   nonce: string;
   address: string;
@@ -35,31 +31,31 @@ interface SignCollectionProps {
 
 const createWalletConnectProvider = () => {
   return new WalletConnectProvider({
-    infuraId: "27e484dcd9e3efcfd25a83a78777cdf1",
+    infuraId: '27e484dcd9e3efcfd25a83a78777cdf1',
     qrcodeModalOptions: {
       mobileLinks: getWalletSupports(),
     },
     rpc: {
-      56: mainnet["BNB"].rpcUrls[0],
-      97: testnet["BNB"].rpcUrls[0],
+      137: mainnet['MATIC'].rpcUrls[0],
+      80001: testnet['MATIC'].rpcUrls[0],
     },
     // accept number
-    chainId: SC["BNB"].chainIdNumber,
+    chainId: SC['MATIC'].chainIdNumber,
   });
 };
 
 let walletConnectProvider = createWalletConnectProvider();
 
-type ChangeWallet = "toMetamask" | "toWalletConnect" | "empty";
+type ChangeWallet = 'toMetamask' | 'toWalletConnect' | 'empty';
 
-let changeWalletRef: ChangeWallet = "empty";
+let changeWalletRef: ChangeWallet = 'empty';
 
 let _isClearData: boolean = true;
 
 const useWeb3 = () => {
   const web3 = useRef<Web3 | null>();
   const isMetamaskInstalled = useMemo(() => {
-    if (typeof window === "undefined") {
+    if (typeof window === 'undefined') {
       return false;
     }
     return (window as any).ethereum;
@@ -90,20 +86,14 @@ const useWeb3 = () => {
       return;
     }
     const isWalletConnect =
-      changeWalletRef === "empty"
-        ? walletConnectProvider.connector.connected
-        : changeWalletRef === "toWalletConnect";
-    web3.current = new Web3(
-      isWalletConnect
-        ? (walletConnectProvider as any)
-        : (window as any).ethereum,
-    );
+      changeWalletRef === 'empty' ? walletConnectProvider.connector.connected : changeWalletRef === 'toWalletConnect';
+    web3.current = new Web3(isWalletConnect ? (walletConnectProvider as any) : (window as any).ethereum);
     return isWalletConnect
       ? walletConnectProvider.request({
-          method: "eth_requestAccounts",
+          method: 'eth_requestAccounts',
         })
       : await (window as any).ethereum.request({
-          method: "eth_requestAccounts",
+          method: 'eth_requestAccounts',
         });
   }, [isMetamaskInstalled]);
 
@@ -113,14 +103,14 @@ const useWeb3 = () => {
         return;
       }
       const signature = await web3.current?.eth?.personal?.sign(
-        `I am signing my one-time nonce: ${nonce}`,
+        web3.current?.utils.toUtf8(`0x${nonce}`),
         address,
-        "",
+        '',
         (e: Error) => {
           errorCb?.(e);
         },
       );
-      return signature || "";
+      return signature || '';
     },
     [isMetamaskInstalled],
   );
@@ -137,7 +127,7 @@ const useWeb3 = () => {
         \nShort url is ${data.name}. Description is ${data.description}.
         \nPicture is ${data.image}. Cover is ${data.cover}`,
         address,
-        "",
+        '',
         (e: Error) => {
           errorCb?.(e);
         },
@@ -154,20 +144,13 @@ const useWeb3 = () => {
   const enc = useCallback((token: any, tokenId: any) => {
     const web3 = new Web3((window as any).provider);
     if (tokenId) {
-      return web3.eth.abi.encodeParameters(
-        ["address", "uint256"],
-        [token, tokenId],
-      );
+      return web3.eth.abi.encodeParameters(['address', 'uint256'], [token, tokenId]);
     } else {
-      return web3.eth.abi.encodeParameter("address", token);
+      return web3.eth.abi.encodeParameter('address', token);
     }
   }, []);
 
-  async function getSignOrder(
-    order: Order,
-    account: any,
-    verifyingContract: any,
-  ) {
+  async function getSignOrder(order: Order, account: any, verifyingContract: any) {
     if (!isMetamaskInstalled) {
       return;
     }
@@ -181,8 +164,8 @@ const useWeb3 = () => {
         }
         const sig = result.result;
         const sig0 = sig.substring(2);
-        const r = "0x" + sig0.substring(0, 64);
-        const s = "0x" + sig0.substring(64, 128);
+        const r = '0x' + sig0.substring(0, 64);
+        const s = '0x' + sig0.substring(64, 128);
         const v = parseInt(sig0.substring(128, 130), 16);
         resolve({
           data,
@@ -197,18 +180,18 @@ const useWeb3 = () => {
       const chainId = await web3.eth.getChainId();
       const data = createTypeData(
         {
-          name: "Order",
-          version: "1",
+          name: 'Order',
+          version: '1',
           chainId,
           verifyingContract,
         },
-        "Order",
+        'Order',
         order,
         Types,
       );
       await (window as any).ethereum.sendAsync(
         {
-          method: "eth_signTypedData_v4",
+          method: 'eth_signTypedData_v4',
           params: [account, JSON.stringify(data)],
           from: account,
         },
@@ -217,11 +200,7 @@ const useWeb3 = () => {
     });
   }
 
-  async function getSignMint721(
-    nft: LazyMint,
-    account: any,
-    verifyingContract: any,
-  ) {
+  async function getSignMint721(nft: LazyMint, account: any, verifyingContract: any) {
     if (!isMetamaskInstalled) {
       return;
     }
@@ -235,8 +214,8 @@ const useWeb3 = () => {
         }
         const sig = result.result;
         const sig0 = sig.substring(2);
-        const r = "0x" + sig0.substring(0, 64);
-        const s = "0x" + sig0.substring(64, 128);
+        const r = '0x' + sig0.substring(0, 64);
+        const s = '0x' + sig0.substring(64, 128);
         const v = parseInt(sig0.substring(128, 130), 16);
         resolve({
           data,
@@ -251,19 +230,19 @@ const useWeb3 = () => {
       const chainId = await web3.eth.getChainId();
       const data = createTypeData(
         {
-          name: "Mint721",
-          version: "1",
+          name: 'Mint721',
+          version: '1',
           chainId,
           verifyingContract,
         },
-        "Mint721",
+        'Mint721',
         nft,
         TypesMint721,
       );
       console.log(data);
       await (window as any).ethereum.sendAsync(
         {
-          method: "eth_signTypedData_v4",
+          method: 'eth_signTypedData_v4',
           params: [account, JSON.stringify(data)],
           from: account,
         },
@@ -272,11 +251,7 @@ const useWeb3 = () => {
     });
   }
 
-  async function getSignMint1155(
-    nft: LazyMint,
-    account: any,
-    verifyingContract: any,
-  ) {
+  async function getSignMint1155(nft: LazyMint, account: any, verifyingContract: any) {
     if (!isMetamaskInstalled) {
       return;
     }
@@ -290,8 +265,8 @@ const useWeb3 = () => {
         }
         const sig = result.result;
         const sig0 = sig.substring(2);
-        const r = "0x" + sig0.substring(0, 64);
-        const s = "0x" + sig0.substring(64, 128);
+        const r = '0x' + sig0.substring(0, 64);
+        const s = '0x' + sig0.substring(64, 128);
         const v = parseInt(sig0.substring(128, 130), 16);
         resolve({
           data,
@@ -306,19 +281,19 @@ const useWeb3 = () => {
       const chainId = await web3.eth.getChainId();
       const data = createTypeData(
         {
-          name: "Mint1155",
-          version: "1",
+          name: 'Mint1155',
+          version: '1',
           chainId,
           verifyingContract,
         },
-        "Mint1155",
+        'Mint1155',
         nft,
         TypesMint1155,
       );
       console.log(data);
       await (window as any).ethereum.sendAsync(
         {
-          method: "eth_signTypedData_v4",
+          method: 'eth_signTypedData_v4',
           params: [account, JSON.stringify(data)],
           from: account,
         },
@@ -332,36 +307,25 @@ const useWeb3 = () => {
       walletConnectProvider = createWalletConnectProvider();
       return await walletConnectProvider.enable();
     } catch (error: any) {
-      console.error(error, "error");
+      console.error(error, 'error');
       walletConnectProvider = createWalletConnectProvider();
       throw error;
     }
   }, []);
 
-  const signWalletConnect = useCallback(
-    async (nonce: number | string, address: string, errorCb: any) => {
-      try {
-        const web3 = new Web3(walletConnectProvider as any);
-        return await web3.eth.personal.sign(
-          `I am signing my one-time nonce: ${nonce}`,
-          address,
-          "",
-          (e) => errorCb(e),
-        );
-      } catch (error: any) {
-        console.error(error, "error");
-        await walletConnectProvider.disconnect();
-        _isClearData = false;
-        throw error;
-      }
-    },
-    [],
-  );
+  const signWalletConnect = useCallback(async (nonce: number | string, address: string, errorCb: any) => {
+    try {
+      const web3 = new Web3(walletConnectProvider as any);
+      return await web3.eth.personal.sign(`I am signing my one-time nonce: ${nonce}`, address, '', (e) => errorCb(e));
+    } catch (error: any) {
+      console.error(error, 'error');
+      await walletConnectProvider.disconnect();
+      _isClearData = false;
+      throw error;
+    }
+  }, []);
   const disconnectWalletConnect = useCallback(
-    async (
-      isClearData: boolean = false,
-      callbackAfterDisconnect = () => {},
-    ) => {
+    async (isClearData: boolean = false, callbackAfterDisconnect = () => {}) => {
       await walletConnectProvider.disconnect();
       walletConnectProvider = createWalletConnectProvider();
       _isClearData = false;
@@ -374,37 +338,31 @@ const useWeb3 = () => {
   );
 
   const listenWalletConnectSessionReject = useCallback((cb: any) => {
-    return walletConnectProvider.connector.on(
-      "disconnect",
-      (error: any, payload: any) => {
-        cb(error, payload, _isClearData);
-        walletConnectProvider = createWalletConnectProvider();
-      },
-    );
+    return walletConnectProvider.connector.on('disconnect', (error: any, payload: any) => {
+      cb(error, payload, _isClearData);
+      walletConnectProvider = createWalletConnectProvider();
+    });
   }, []);
 
   const listenWalletConnectConnect = useCallback((cb: any) => {
-    return walletConnectProvider.connector.on(
-      "wc_sessionRequest",
-      (error: any, payload: any) => {
-        cb(error, payload);
-      },
-    );
+    return walletConnectProvider.connector.on('wc_sessionRequest', (error: any, payload: any) => {
+      cb(error, payload);
+    });
   }, []);
 
   const getAddress = useCallback(async () => {
     if (!isMetamaskInstalled && !walletConnectProvider.connector.connected) {
-      return "";
+      return '';
     }
     const address = await web3.current?.eth?.getCoinbase();
-    if (typeof window === "undefined") {
-      return "";
+    if (typeof window === 'undefined') {
+      return '';
     }
     if (!address) {
       // window.alert("Please activate MetaMask first.");
-      return "";
+      return '';
     }
-    return address || "";
+    return address || '';
   }, [isMetamaskInstalled]);
 
   const getContract = useCallback(
@@ -413,16 +371,11 @@ const useWeb3 = () => {
         return;
       }
       const isWalletConnect =
-        changeWalletRef === "empty"
-          ? walletConnectProvider.connector.connected
-          : changeWalletRef === "toWalletConnect";
+        changeWalletRef === 'empty' ? walletConnectProvider.connector.connected : changeWalletRef === 'toWalletConnect';
       const web3 = isWalletConnect
         ? new Web3(walletConnectProvider as any)
         : new Web3((window as any).ethereum || SC[token].rpcUrls[0]);
-      return new web3.eth.Contract(
-        contract.contractAbi,
-        contract.contractAddress,
-      );
+      return new web3.eth.Contract(contract.contractAbi, contract.contractAddress);
     },
     [isMetamaskInstalled],
   );
@@ -433,35 +386,23 @@ const useWeb3 = () => {
         return;
       }
       const isWalletConnect =
-        changeWalletRef === "empty"
-          ? walletConnectProvider.connector.connected
-          : changeWalletRef === "toWalletConnect";
+        changeWalletRef === 'empty' ? walletConnectProvider.connector.connected : changeWalletRef === 'toWalletConnect';
       const web3 = isWalletConnect
         ? new Web3(walletConnectProvider as any)
         : new Web3((window as any).ethereum || SC[token].rpcUrls[0]);
-      return new web3.eth.Contract(
-        contract.contractAbi,
-        contract.contractAddress,
-      );
+      return new web3.eth.Contract(contract.contractAbi, contract.contractAddress);
     },
     [isMetamaskInstalled],
   );
 
   const getBalanceOfToken = useCallback(
     async (account: string, token: keyof typeof SC, tokenAddress: string) => {
-      if (
-        (!isMetamaskInstalled && !walletConnectProvider.connector.connected) ||
-        !account
-      ) {
-        return "";
+      if ((!isMetamaskInstalled && !walletConnectProvider.connector.connected) || !account) {
+        return '';
       }
       const isWalletConnect =
-        changeWalletRef === "empty"
-          ? walletConnectProvider.connector.connected
-          : changeWalletRef === "toWalletConnect";
-      const web3 = isWalletConnect
-        ? new Web3(walletConnectProvider as any)
-        : new Web3((window as any).ethereum);
+        changeWalletRef === 'empty' ? walletConnectProvider.connector.connected : changeWalletRef === 'toWalletConnect';
+      const web3 = isWalletConnect ? new Web3(walletConnectProvider as any) : new Web3((window as any).ethereum);
       const contract = getContractOfNetwork(
         {
           contractAbi: SC[token].abi,
@@ -477,19 +418,12 @@ const useWeb3 = () => {
 
   const getBalance = useCallback(
     async (account: string) => {
-      if (
-        (!isMetamaskInstalled && !walletConnectProvider.connector.connected) ||
-        !account
-      ) {
-        return "";
+      if ((!isMetamaskInstalled && !walletConnectProvider.connector.connected) || !account) {
+        return '';
       }
       const isWalletConnect =
-        changeWalletRef === "empty"
-          ? walletConnectProvider.connector.connected
-          : changeWalletRef === "toWalletConnect";
-      const web3 = isWalletConnect
-        ? new Web3(walletConnectProvider as any)
-        : new Web3((window as any).ethereum);
+        changeWalletRef === 'empty' ? walletConnectProvider.connector.connected : changeWalletRef === 'toWalletConnect';
+      const web3 = isWalletConnect ? new Web3(walletConnectProvider as any) : new Web3((window as any).ethereum);
       const balance = await web3.eth.getBalance(account);
       return web3.utils.fromWei(balance);
     },
@@ -501,12 +435,8 @@ const useWeb3 = () => {
       return;
     }
     const isWalletConnect =
-      changeWalletRef === "empty"
-        ? walletConnectProvider.connector.connected
-        : changeWalletRef === "toWalletConnect";
-    const web3 = isWalletConnect
-      ? new Web3(walletConnectProvider as any)
-      : new Web3((window as any).ethereum);
+      changeWalletRef === 'empty' ? walletConnectProvider.connector.connected : changeWalletRef === 'toWalletConnect';
+    const web3 = isWalletConnect ? new Web3(walletConnectProvider as any) : new Web3((window as any).ethereum);
     return Number(web3.utils.randomHex(32));
   }, [isMetamaskInstalled]);
 
@@ -517,7 +447,7 @@ const useWeb3 = () => {
       }
       try {
         await (window as any).ethereum.request({
-          method: "wallet_switchEthereumChain",
+          method: 'wallet_switchEthereumChain',
           params: [{ chainId: SC[token].chainId }],
         });
       } catch (error: any) {
@@ -528,13 +458,15 @@ const useWeb3 = () => {
         // This error code indicates that the chain has not been added to MetaMask.
         if (error.code === 4902) {
           await (window as any).ethereum.request({
-            method: "wallet_addEthereumChain",
-            params: [{
-              chainId: SC[token].chainId,
-              chainName: SC[token].chainName,
-              rpcUrls: SC[token].rpcUrls,
-              nativeCurrency: SC[token].nativeCurrency
-            }],
+            method: 'wallet_addEthereumChain',
+            params: [
+              {
+                chainId: SC[token].chainId,
+                chainName: SC[token].chainName,
+                rpcUrls: SC[token].rpcUrls,
+                nativeCurrency: SC[token].nativeCurrency,
+              },
+            ],
           });
         } else {
           throw error;
@@ -550,12 +482,10 @@ const useWeb3 = () => {
       return;
     }
     const isWalletConnect =
-      changeWalletRef === "empty"
-        ? walletConnectProvider.connector.connected
-        : changeWalletRef === "toWalletConnect";
+      changeWalletRef === 'empty' ? walletConnectProvider.connector.connected : changeWalletRef === 'toWalletConnect';
     return isWalletConnect
-      ? await walletConnectProvider.request({ method: "eth_chainId" })
-      : await (window as any).ethereum.request({ method: "eth_chainId" });
+      ? await walletConnectProvider.request({ method: 'eth_chainId' })
+      : await (window as any).ethereum.request({ method: 'eth_chainId' });
   }, [isMetamaskInstalled]);
 
   const listenNetworkChange = useCallback(
@@ -563,7 +493,7 @@ const useWeb3 = () => {
       if (!isMetamaskInstalled) {
         return;
       }
-      (window as any).ethereum.on("chainChanged", cb);
+      (window as any).ethereum.on('chainChanged', cb);
     },
     [isMetamaskInstalled],
   );
@@ -573,31 +503,25 @@ const useWeb3 = () => {
       if (!isMetamaskInstalled) {
         return;
       }
-      (window as any).ethereum.on("accountsChanged", cb);
+      (window as any).ethereum.on('accountsChanged', cb);
     },
     [isMetamaskInstalled],
   );
 
-  const listenWalletConnectAccountChange = useCallback(
-    (cb?: (accounts: Array<string>) => Promise<void>) => {
-      walletConnectProvider.on("accountsChanged", cb);
-    },
-    [],
-  );
+  const listenWalletConnectAccountChange = useCallback((cb?: (accounts: Array<string>) => Promise<void>) => {
+    walletConnectProvider.on('accountsChanged', cb);
+  }, []);
 
-  const listenWalletConnectNetworkChange = useCallback(
-    (cb?: (chaindID: any) => void) => {
-      walletConnectProvider.on("chainChanged", cb);
-    },
-    [],
-  );
+  const listenWalletConnectNetworkChange = useCallback((cb?: (chaindID: any) => void) => {
+    walletConnectProvider.on('chainChanged', cb);
+  }, []);
 
   const listenMetamaskDisconnect = useCallback((cb: any) => {
-    return (window as any).ethereum.on("disconnect", cb);
+    return (window as any).ethereum.on('disconnect', cb);
   }, []);
 
   const listenWalletConnectDisconnect = useCallback((cb: any) => {
-    return walletConnectProvider.on("disconnect", cb);
+    return walletConnectProvider.on('disconnect', cb);
   }, []);
 
   const disconnect = useCallback(async () => {
@@ -605,7 +529,7 @@ const useWeb3 = () => {
       return;
     }
     return await (window as any).ethereum.request({
-      method: "eth_requestAccounts",
+      method: 'eth_requestAccounts',
       params: [{ eth_accounts: {} }],
     });
   }, [isMetamaskInstalled]);
@@ -615,12 +539,10 @@ const useWeb3 = () => {
       return;
     }
     const isWalletConnect =
-      changeWalletRef === "empty"
-        ? walletConnectProvider.connector.connected
-        : changeWalletRef === "toWalletConnect";
+      changeWalletRef === 'empty' ? walletConnectProvider.connector.connected : changeWalletRef === 'toWalletConnect';
     return isWalletConnect
-      ? walletConnectProvider.request({ method: "eth_accounts" })
-      : (window as any).ethereum.request({ method: "eth_accounts" });
+      ? walletConnectProvider.request({ method: 'eth_accounts' })
+      : (window as any).ethereum.request({ method: 'eth_accounts' });
   }, [isMetamaskInstalled]);
 
   const getWalletConnectChainId = useCallback(() => {
@@ -628,12 +550,11 @@ const useWeb3 = () => {
   }, []);
 
   const isMetamaskConnected = useCallback(() => {
-    if(!isMetamaskInstalled) {
+    if (!isMetamaskInstalled) {
       return;
     }
     return (window as any).ethereum.isConnected() as boolean;
   }, [isMetamaskInstalled]);
-
 
   const addEthereumChain = useCallback(
     async (token: keyof typeof SC) => {
@@ -641,13 +562,15 @@ const useWeb3 = () => {
         return;
       }
       return await (window as any).ethereum.request({
-        method: "wallet_addEthereumChain",
-        params: [{
-          chainId: SC[token].chainId,
-          chainName: SC[token].chainName,
-          rpcUrls: SC[token].rpcUrls,
-          nativeCurrency: SC[token].nativeCurrency
-        }],
+        method: 'wallet_addEthereumChain',
+        params: [
+          {
+            chainId: SC[token].chainId,
+            chainName: SC[token].chainName,
+            rpcUrls: SC[token].rpcUrls,
+            nativeCurrency: SC[token].nativeCurrency,
+          },
+        ],
       });
     },
     [isMetamaskInstalled],
@@ -692,7 +615,7 @@ const useWeb3 = () => {
     listenMetamaskDisconnect,
     listenWalletConnectDisconnect,
     isMetamaskConnected,
-    addEthereumChain
+    addEthereumChain,
   };
 };
 

@@ -1,10 +1,7 @@
-import {
-  PersonalInfo,
-  User,
-} from 'utils/interfaces'
+import { PersonalInfo, User } from 'utils/interfaces';
 
 export interface LoginRequestBody {
-  address: string;
+  walletAddress: string;
   signature: string;
 }
 
@@ -13,11 +10,7 @@ export interface LogoutRequestBody {
 }
 
 export interface MetamaskInfoResponse {
-  data: {
-    address: string;
-    nonce: string;
-    isNew?: boolean;
-  };
+  data: string;
 }
 
 export interface UserInfoResponse {

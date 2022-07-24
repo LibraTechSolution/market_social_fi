@@ -1,4 +1,4 @@
-import { requestWithJwt, requestWithoutJwt } from "api/request/index.api";
+import { requestWithJwt, requestWithoutJwt } from 'api/request/index.api';
 import {
   LoginRequestBody,
   LogoutRequestBody,
@@ -6,31 +6,27 @@ import {
   UserInfoResponse,
   UpdateProfileResponse,
   GetUserDetailResponse,
-} from './index.interface'
+} from './index.interface';
 
-import { AxiosResponse } from "axios";
+import { AxiosResponse } from 'axios';
 
-export const getMetamaskInfo = (
-  address: string,
-): Promise<AxiosResponse<MetamaskInfoResponse>> => {
-  return requestWithoutJwt.get<MetamaskInfoResponse>(
-    `/auth/get-nonce/${address}`,
-  );
+export const getMetamaskInfo = (address: string): Promise<AxiosResponse<MetamaskInfoResponse>> => {
+  return requestWithoutJwt.post<MetamaskInfoResponse>('/auth/get_nonce', { walletAddress: address });
 };
 
-export const login = (
-  params: LoginRequestBody,
-): Promise<AxiosResponse<UserInfoResponse>> => {
-  return requestWithoutJwt.post<UserInfoResponse>("/auth/login", params);
+export const login = (params: LoginRequestBody): Promise<AxiosResponse<UserInfoResponse>> => {
+  return requestWithoutJwt.post<UserInfoResponse>('/auth/login', params);
 };
 
 export const logout = (params: LogoutRequestBody): Promise<AxiosResponse> => {
-  return requestWithJwt.post("/auth/logout", params);
+  return requestWithJwt.post('/auth/logout', params);
 };
 
 // Use in my profile page
-export const updateUser = (
-  params: FormData,
-): Promise<AxiosResponse<UpdateProfileResponse>> => {
+export const updateUser = (params: FormData): Promise<AxiosResponse<UpdateProfileResponse>> => {
   return requestWithJwt.put<GetUserDetailResponse>(`/user`, params);
+};
+
+export const verifySignedMessage = (params: LoginRequestBody): Promise<AxiosResponse<any>> => {
+  return requestWithoutJwt.post<any>('/auth/verify_signed_message', params);
 };
