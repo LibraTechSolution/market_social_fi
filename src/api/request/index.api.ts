@@ -27,7 +27,7 @@ requestWithJwt.interceptors.request.use(async (config) => {
   return {
     ...config,
     headers: {
-      Authorization: `Bearer ${personalInfo?.tokens?.access.token || ''}`,
+      Authorization: `Bearer ${personalInfo?.token || ''}`,
       ...config.headers,
     },
   };

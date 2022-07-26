@@ -49,7 +49,7 @@ const MintModule = ({ isShowModal, closeModal }: Props) => {
           contractAddress: MinScContract.ERC721.address,
           contractAbi: MinScContract.ERC721.abi,
         });
-        const address = personalInfo?.user?.address;
+        const address = personalInfo?.walletAddress;
         setProcess((pre) => ({ ...pre, isLoadingMint: true }));
         const payablePrice = toWei((0.5 * Number(quantity)).toFixed(9).toString(), 'ether');
         //const payablePrice = (Number(ethers.utils.parseEther('0.5')) * Number(quantity)).toString();
