@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { ERRORS, METAMASK_DOWNLOAD_LINK, CURRENCY_UNIT_NAME } from 'utils/constant';
 import { SC } from 'utils/smart-contract';
 import WalletConnectPng from 'assets/images/wallet-connect.png';
-import useSessionStorage from 'hooks/useSessionStorage';
+import useLocalStorage from 'hooks/useLocalStorage';
 import useWeb3 from 'hooks/useWeb3';
 import DownloadSvg from 'assets/images/icons/new-download.svg';
 import DotSpinnerSvg from 'assets/images/icons/dotSpinner.svg';
@@ -56,7 +56,7 @@ const ConnectWallet = ({
   });
   const router = useRouter();
   const [errors, setErrors] = useState<IError>({ email: [], username: [] });
-  const [personalInfo, setPersonalInfo] = useSessionStorage<PersonalInfo | null>('personal-info', null);
+  const [personalInfo, setPersonalInfo] = useLocalStorage<PersonalInfo | null>('personal-info', null);
 
   useEffect(() => {
     if (isShowModal) {

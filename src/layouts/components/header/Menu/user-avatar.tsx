@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import useWeb3 from 'hooks/useWeb3';
 import useClickOutside from 'hooks/useClickOutside';
-import useSessionStorage from 'hooks/useSessionStorage';
+import useLocalStorage from 'hooks/useLocalStorage';
 import { dotsSensitive } from 'utils/functions';
 import { CURRENCY_UNIT_NAME } from 'utils/constant';
 import { PersonalInfo } from 'utils/interfaces';
@@ -35,7 +35,7 @@ const UserAvatar = ({
   const web3 = useWeb3();
   const [open, setOpen] = useState<boolean>(false);
 
-  const [personalInfo, setPersonalInfo] = useSessionStorage<PersonalInfo | null>('personal-info', null);
+  const [personalInfo, setPersonalInfo] = useLocalStorage<PersonalInfo | null>('personal-info', null);
   const handleChangeWallet = useCallback(async () => {
     setIsChangeWallet(true);
     setIsWalletConnectConnectedBefore(web3.isWalletConnected);

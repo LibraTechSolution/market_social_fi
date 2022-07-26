@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction, useCallback, useMemo } from 'react';
 import { logout } from 'api/user/index.api';
 import { PersonalInfo } from 'utils/interfaces';
-import useSessionStorage from 'hooks/useSessionStorage';
+import useLocalStorage from 'hooks/useLocalStorage';
 import { useRouter } from 'next/router';
 import useWeb3 from 'hooks/useWeb3';
 import Modal from 'components/modal';
@@ -19,7 +19,7 @@ interface Props {
 }
 
 const DisconnectWallet = ({ isShowModal, closeModal, setIsChangeWallet, setIsWalletConnectConnectedBefore }: Props) => {
-  const [personalInfo, setPersonalInfo] = useSessionStorage<PersonalInfo | null>('personal-info', null);
+  const [personalInfo, setPersonalInfo] = useLocalStorage<PersonalInfo | null>('personal-info', null);
   const web3 = useWeb3();
   const router = useRouter();
 
