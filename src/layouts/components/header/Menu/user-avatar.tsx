@@ -57,28 +57,28 @@ const UserAvatar = ({
   }, [web3, personalInfo]);
 
   const displayUsername = useMemo(() => {
-    return personalInfo?.user?.username
-      ? personalInfo?.user?.username.length >= 20
+    return personalInfo?.username
+      ? personalInfo?.username.length >= 20
         ? dotsSensitive({
-            originalString: personalInfo?.user?.username,
+            originalString: personalInfo?.username,
             startPosition: 9,
-            endPosition: personalInfo?.user?.username.length - 4,
+            endPosition: personalInfo?.username.length - 4,
           })
-        : personalInfo?.user?.username
+        : personalInfo?.username
       : 'Unnamed';
   }, [personalInfo]);
 
   useClickOutside(ref, () => setOpen(false));
 
   if (personalInfo) {
-    const address = personalInfo?.user?.address;
+    const address = personalInfo?.walletAddress;
     return (
       <div ref={ref} className={cx('menu-item-dropdown')}>
         <div onClick={() => setOpen(!open)}>
-          {personalInfo?.user?.avatar ? (
-            <Image src={personalInfo?.user?.avatar} width={40} height={40} alt="" className={cx('avatar-aws')} />
+          {personalInfo?.avatar ? (
+            <Image src={personalInfo?.avatar} width={40} height={40} alt="" className={cx('avatar-aws')} />
           ) : (
-            <MetamaskAvatar className={cx('avatar-aws')} address={personalInfo?.user?.address} size={40} />
+            <MetamaskAvatar className={cx('avatar-aws')} address={personalInfo?.walletAddress} size={40} />
           )}
         </div>
         <div className={cx('menu-item-dropdown-content', { 'abs-block': open })}>
@@ -104,7 +104,7 @@ const UserAvatar = ({
               <div className={cx('number-binance')}>
                 <BinanceSVG />
                 <span>
-                  {balance || 0} {CURRENCY_UNIT_NAME.BNB}
+                  {balance || 0} {CURRENCY_UNIT_NAME.MATIC}
                 </span>
               </div>
             </div>

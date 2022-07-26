@@ -1,5 +1,5 @@
-import { NextPage } from "next";
-import { ReactElement, ReactNode } from "react";
+import { NextPage } from 'next';
+import { ReactElement, ReactNode } from 'react';
 
 export interface CurrencyName {
   [key: string]: string;
@@ -10,11 +10,14 @@ export interface PriceToUSD {
 }
 
 export interface PersonalInfo {
-  user: User;
-  tokens: {
-    access: TokenInfo;
-    refresh: TokenInfo;
-  };
+  refreshToken: string;
+  refreshTokenExpiresAt: string;
+  token: string;
+  tokenExpiresAt: string;
+  userId: string;
+  walletAddress: string;
+  username?: string;
+  avatar?: string;
 }
 
 export interface MarketPlace {
@@ -40,15 +43,15 @@ export interface TokenInfo {
   expires: string;
 }
 
-export type SmartContractInterfaces = "ERC-721" | "ERC-1155";
+export type SmartContractInterfaces = 'ERC-721';
 
 export type ConnectWalletSteps =
-  | "init"
-  | "metamask-not-found"
-  | "connecting-to-metamask"
-  | "error-connecting"
-  | "wrong-network"
-  | "update-profile";
+  | 'init'
+  | 'metamask-not-found'
+  | 'connecting-to-metamask'
+  | 'error-connecting'
+  | 'wrong-network'
+  | 'update-profile';
 
 export type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode;

@@ -1,5 +1,5 @@
 import { ConnectWalletSteps, PersonalInfo } from 'utils/interfaces';
-import { getMetamaskInfo, login, updateUser } from 'api/user/index.api';
+import { getMetamaskInfo, verifySignedMessage, updateUser } from 'api/user/index.api';
 import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import FoxPng from 'assets/images/fox.png';
 import Image from 'next/image';
@@ -125,34 +125,10 @@ const ConnectWallet = ({
     isEmpty(validateErrors) ? closeModal() : setErrors(validateErrors);
   }, [closeModal, personalInfo, setPersonalInfo, userInfo.email, userInfo.username, validateUserInfo]);
 
-  const handleLogin = useCallback(async (address: string, signature: string) => {
+  const handleLogin = useCallback(async (walletAddress: string, signature: string) => {
     try {
-      const userInfo = {
-        data: {
-          user: {
-            _id: '61f0d712ad583b90aa3f1807',
-            address: '0xac2afd96b159b4ada1a336c756ce3e3901886977',
-            nonce: 490547,
-            dateCreated: '2022-06-20T07:16:39.842Z',
-            dateUpdated: '2022-06-20T07:16:39.842Z',
-          },
-          tokens: {
-            access: {
-              expires: '2022-06-20T07:16:39.842Z',
-              token:
-                'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MWYwZDcxMmFkNTgzYjkwYWEzZjE4MDciLCJyb2xlIjoidXNlciIsImFkZHJlc3MiOiIweGFjMmFmZDk2YjE1OWI0YWRhMWEzMzZjNzU2Y2UzZTM5MDE4ODY5NzciLCJpYXQiOjE2NTUxMDQ1OTksImV4cCI6MTY1NTcwOTM5OX0.j6c1NTUmFaB6Y02ySRw_qGXPnxsDWDJPVASL5LRR-YjAWxsWbFOF-j_8Hzaf-tS8QIO_4n_FGheU4clwq6mdRw',
-            },
-            refresh: {
-              expires: '2022-06-21T07:16:39.843',
-              token:
-                'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MWYwZDcxMmFkNTgzYjkwYWEzZjE4MDciLCJyb2xlIjoidXNlciIsImFkZHJlc3MiOiIweGFjMmFmZDk2YjE1OWI0YWRhMWEzMzZjNzU2Y2UzZTM5MDE4ODY5NzciLCJpYXQiOjE2NTUxMDQ1OTksImV4cCI6MTY1NTcwOTM5OX0.j6c1NTUmFaB6Y02ySRw_qGXPnxsDWDJPVASL5LRR-YjAWxsWbFOF-j_8Hzaf-tS8QIO_4n_FGheU4clwq6mdRw',
-            },
-          },
-        },
-      };
-      // const userInfo = await login({ address, signature });
-      // return userInfo.data;
-      return userInfo;
+      const userInfo = await verifySignedMessage({ walletAddress, signature });
+      return userInfo.data;
     } catch (error) {
       setStep('error-connecting');
       return null;
@@ -163,8 +139,8 @@ const ConnectWallet = ({
     async (address: string, nonce: string) => {
       try {
         const signature = await web3.signIn({
-          address,
           nonce,
+          address,
           errorCb: (error: Error) => {
             if (error) {
               setStep('error-connecting');
@@ -183,8 +159,8 @@ const ConnectWallet = ({
   const handleConnect = useCallback(async () => {
     const address = await web3.getAddress();
     try {
-      // const metamaskInfo = await getMetamaskInfo(address);
-      const nonce = '490547';
+      const metamaskInfo = await getMetamaskInfo(address);
+      const nonce = metamaskInfo?.data?.data;
       const signature = await handleShowMetaNotiToSign(address, nonce);
       if (!signature) {
         return;
@@ -198,12 +174,6 @@ const ConnectWallet = ({
 
       setPersonalInfo(personalInfo.data);
 
-      // if (metamaskInfo.data.data.isNew) {
-      //   setUserInfo({ email: '', username: '' });
-      //   setStep('update-profile');
-      // } else {
-      //   closeModal();
-      // }
       closeModal();
       setIsWalletConnectConnectedBefore(false);
       web3.setChangeWalletRef('empty');
@@ -229,24 +199,24 @@ const ConnectWallet = ({
 
   const handleConnectWallet = useCallback(async () => {
     setIsWalletConnect(false);
+
     if (!web3.isMetamaskInstalled) {
       setStep('metamask-not-found');
       return;
     }
     setStep('connecting-to-metamask');
-
     try {
       await web3.createWeb3Instance();
     } catch (error: any) {
       setStep('error-connecting');
     }
     try {
-      await web3.addEthereumChain(CURRENCY_UNIT_NAME.BNB);
+      await web3.addEthereumChain(CURRENCY_UNIT_NAME.MATIC);
       const chainID = await web3.getNetworkChainID();
       if (
         web3.isHex(chainID)
-          ? chainID !== SC[CURRENCY_UNIT_NAME.BNB].chainId
-          : web3.toHex(chainID) !== SC[CURRENCY_UNIT_NAME.BNB].chainId
+          ? chainID !== SC[CURRENCY_UNIT_NAME.MATIC].chainId
+          : web3.toHex(chainID) !== SC[CURRENCY_UNIT_NAME.MATIC].chainId
       ) {
         setStep('wrong-network');
         wrongNetworkStatus.current = true;
@@ -291,28 +261,29 @@ const ConnectWallet = ({
     try {
       setStep('connecting-to-metamask');
       const accounts = await web3.walletConnect();
-      // const metamaskInfo = await getMetamaskInfo(accounts[0].toLowerCase());
-      const nonce = '490547';
+      const metamaskInfo = await getMetamaskInfo(accounts[0].toLowerCase());
+      const nonce = metamaskInfo?.data?.data;
       const signature = await web3.signWalletConnect(nonce, accounts[0], (error: any) => {
         if (error) {
           setStep('error-connecting');
         }
       });
 
-      if (web3.getWalletConnectChainId() !== SC[CURRENCY_UNIT_NAME.BNB].chainIdNumber) {
+      if (web3.getWalletConnectChainId() !== SC[CURRENCY_UNIT_NAME.MATIC].chainIdNumber) {
         wrongNetworkStatus.current = true;
         setStep('wrong-network');
         await web3.disconnectWalletConnect();
         return;
       }
 
-      // const personalInfo = await handleLogin(accounts[0].toLowerCase(), signature);
-      // if (!personalInfo) {
-      //   return;
-      // }
-      //
-      // setPersonalInfo(personalInfo.data);
+      const personalInfo = await handleLogin(accounts[0].toLowerCase(), signature);
+      if (!personalInfo) {
+        return;
+      }
 
+      setPersonalInfo(personalInfo.data);
+
+      // TODO: Pending register when username empty
       // if (metamaskInfo.data.data.isNew) {
       //   setUserInfo({ email: '', username: '' });
       //   setStep('update-profile');
@@ -357,7 +328,7 @@ const ConnectWallet = ({
 
   const handleSwitchNetwork = useCallback(async () => {
     if (!isWalletConnect) {
-      await web3.switchNetwork(CURRENCY_UNIT_NAME.BNB);
+      await web3.switchNetwork(CURRENCY_UNIT_NAME.MATIC);
       setStep('connecting-to-metamask');
       handleConnect();
     } else {
@@ -367,7 +338,7 @@ const ConnectWallet = ({
 
   useEffect(() => {
     web3.listenNetworkChange((chainID: any) => {
-      if (wrongNetworkStatus.current && chainID === SC[CURRENCY_UNIT_NAME.BNB].chainId) {
+      if (wrongNetworkStatus.current && chainID === SC[CURRENCY_UNIT_NAME.MATIC].chainId) {
         setStep('connecting-to-metamask');
         handleConnect();
       }
@@ -453,7 +424,7 @@ const ConnectWallet = ({
         <div className="gdf-title">Wrong Network</div>
         <div className="gdf-desc">Please change network on your wallet to</div>
         <div className={cx('network-name')} onClick={handleSwitchNetwork}>
-          {SC[CURRENCY_UNIT_NAME.BNB].chainName}
+          {SC[CURRENCY_UNIT_NAME.MATIC].chainName}
         </div>
       </div>
     );

@@ -1,9 +1,6 @@
 import { ChangeEventHandler, InputHTMLAttributes, ReactNode, useCallback, useEffect } from 'react';
-import { resolveSrv } from 'dns';
-import classNames from 'classnames/bind';
-import styles from './index.module.scss';
-
-const cx = classNames.bind(styles);
+import cx from 'classnames';
+import Styled from './index.style';
 
 interface Props extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
@@ -17,7 +14,6 @@ interface Props extends InputHTMLAttributes<HTMLInputElement> {
   placeholder?: string;
   type?: string;
   onChange?: ChangeEventHandler<HTMLInputElement> | undefined;
-  setValue?: (value: any) => void;
 }
 
 const Input = ({
@@ -33,36 +29,33 @@ const Input = ({
   type = 'text',
   required = false,
   onChange,
-  setValue,
   ...props
 }: Props) => {
-  useEffect(() => {
-    setValue?.(value);
-  }, [onChange]);
-
   return (
-    <div className={cx(className, 'wrapper')}>
-      <span className={cx('pre-icon')}>{preIcon}</span>
+    <Styled.Input className={cx(className)}>
+      <Styled.PreIcon className="pre-icon">{preIcon}</Styled.PreIcon>
       {label && (
-        <div className={cx('label', { 'custom-label': !subLabel })}>
-          {label}
-          {required && <span className={cx('required')}>*</span>}
-        </div>
+        <Styled.Label className={cx('label', { 'custom-label': !subLabel })}>
+          {label} {required && <Styled.Start>*</Styled.Start>}
+        </Styled.Label>
       )}
-      {subLabel && <div className={cx('sub-label')}>{subLabel}</div>}
-      <div className={cx('relative-wrapper')}>
-        <input
+      {subLabel && <Styled.SubLabel className="sub-label">{subLabel}</Styled.SubLabel>}
+      <Styled.RelativeWrapper>
+        <Styled.TextBox
           {...props}
-          type={type}
           maxLength={maxLength}
+          type={type}
           placeholder={placeholder}
           value={value}
+          hasPreIcon={!!preIcon}
+          hasPostIcon={!!postIcon}
+          disabled={disabled}
           onChange={onChange}
-          className={cx('input', { disabled: disabled, hasPreIcon: !!preIcon, hasPostIcon: !!postIcon })}
+          className="input"
         />
-        <span className={cx('post-icon')}>{postIcon}</span>
-      </div>
-    </div>
+        <Styled.PostIcon className="post-icon">{postIcon}</Styled.PostIcon>
+      </Styled.RelativeWrapper>
+    </Styled.Input>
   );
 };
 

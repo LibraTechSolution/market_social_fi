@@ -80,3 +80,9 @@ export const delay = (timeout: number) => {
     setTimeout(resolve, timeout);
   });
 };
+
+export const formatThousand = (price: string) => {
+  price = price.replace(/,/g, '');
+  price = price.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  return price;
+};

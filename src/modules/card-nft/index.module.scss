@@ -1,7 +1,9 @@
 .nft-item {
+  width: 334px;
   height: 500px;
   border-radius: 32px;
   border: 1px solid var(--gdf-blue-ghost);
+  filter: drop-shadow(0px 0px 22px rgba(163, 143, 201, 0.5));
   background-color: var(--gdf-white);
   overflow: hidden;
   position: relative;
@@ -104,13 +106,14 @@
   width: 100%;
   padding: 0 28px;
   margin-top: 50px;
+  color: var(--gdf-blue-charade);
 
   & > p {
     overflow: hidden;
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 1;
-    font: var(--font-heading-6);
+    font: var(--font-heading-10);
   }
 
   .nft-price {
@@ -120,7 +123,6 @@
 
     & > p:first-child {
       color: var(--gdf-blue);
-      font: var(--font-heading-5);
     }
 
     & > p:last-child {

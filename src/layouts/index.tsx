@@ -2,11 +2,10 @@ import { ReactNode, useState } from 'react';
 import useWeb3 from 'hooks/useWeb3';
 import Header from './components/header';
 import Footer from './components/footer';
-import classNames from 'classnames/bind';
-import styles from './index.module.scss';
 import { ConnectWalletSteps, PersonalInfo } from 'utils/interfaces';
 import BackgroundBannerCard from 'assets/images/background-banner.svg';
-
+import classNames from 'classnames/bind';
+import styles from './index.module.scss';
 const cx = classNames.bind(styles);
 
 interface Props {

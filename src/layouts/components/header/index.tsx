@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { getMetamaskInfo } from 'api/user/index.api';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -13,7 +13,6 @@ import useClickOutside from 'hooks/useClickOutside';
 import useSessionStorage from 'hooks/useSessionStorage';
 import ConnectWallet from 'modules/connect-wallet';
 import DisconnectWallet from 'modules/disconnect-wallet';
-import Button from 'components/button';
 import Menu from './Menu';
 import UserAvatar from './Menu/user-avatar';
 
@@ -21,7 +20,7 @@ const cx = classNames.bind(styles);
 
 const Navbar = () => {
   const router = useRouter();
-  const { asPath, query, push, reload } = router;
+  const { reload } = router;
   const [isChangeWallet, setIsChangeWallet] = useState<boolean>(false);
   const [showDisconnectWalletModal, setShowDisconnectWalletModal] = useState<boolean>(false);
   const [isWalletConnectConnectedBefore, setIsWalletConnectConnectedBefore] = useState<boolean>(false);
@@ -35,9 +34,9 @@ const Navbar = () => {
   const web3 = useWeb3();
 
   const fetchBalance = useCallback(async () => {
-    let balance: string = await web3.getBalance(personalInfo?.user?.address || '');
+    let balance: string = await web3.getBalance(personalInfo?.walletAddress || '');
     setBalance(balance);
-  }, [personalInfo?.user?.address, web3]);
+  }, [personalInfo?.walletAddress, web3]);
 
   const handleShowMetaNotiToSign = useCallback(
     async (address: string, nonce: string) => {
@@ -69,14 +68,14 @@ const Navbar = () => {
   useEffect(() => {
     web3.listenWalletConnectAccountChange(async (accounts: string[]) => {
       if (
-        accounts[0]?.toLowerCase() !== personalInfo?.user?.address.toLowerCase() &&
-        personalInfo?.user?.address &&
+        accounts[0]?.toLowerCase() !== personalInfo?.walletAddress.toLowerCase() &&
+        personalInfo?.walletAddress &&
         countRef.current === 0
       ) {
         countRef.current += 1;
         try {
-          // const metamaskInfo = await getMetamaskInfo(accounts[0].toLowerCase());
-          const nonce = '490547';
+          const metamaskInfo = await getMetamaskInfo(accounts[0].toLowerCase());
+          const nonce = metamaskInfo?.data?.data;
           const signature = await web3.signWalletConnect(nonce, accounts[0].toLowerCase(), (error: any) => {
             console.log(error);
           });
@@ -99,39 +98,39 @@ const Navbar = () => {
       if (
         ((accounts && accounts.length === 0) || !accounts) &&
         window.location.pathname === router.asPath &&
-        personalInfo?.user?.address
+        personalInfo?.walletAddress
       ) {
         setPersonalInfo(null);
         navigateDisconnect(router);
         return;
       }
       if (
-        accounts[0]?.toLowerCase() !== personalInfo?.user?.address.toLowerCase() &&
-        personalInfo?.user?.address &&
+        accounts[0]?.toLowerCase() !== personalInfo?.walletAddress.toLowerCase() &&
+        personalInfo?.walletAddress &&
         countRef.current === 0
       ) {
         countRef.current += 1;
         try {
           const metamaskInfo = await getMetamaskInfo(accounts[0]);
-          if (metamaskInfo.data.data.isNew && !web3.isWalletConnected) {
-            countRef.current = 0;
-            setPersonalInfo(null);
-            setShowConnectWalletModal(true);
-          } else {
-            if (
-              (metamaskInfo.data.data.hasOwnProperty('isNew') && !metamaskInfo.data.data.isNew) ||
-              'isNew' in metamaskInfo.data.data === false
-            ) {
-              await web3.disconnect();
-              await web3.createWeb3Instance();
-              const signature = await handleShowMetaNotiToSign(accounts[0], metamaskInfo.data.data.nonce);
-              if (!signature) {
-                return;
-              }
-              countRef.current = 0;
-              reload();
-            }
-          }
+          // if (metamaskInfo.data.data.isNew && !web3.isWalletConnected) {
+          //   countRef.current = 0;
+          //   setPersonalInfo(null);
+          //   setShowConnectWalletModal(true);
+          // } else {
+          //   if (
+          //     (metamaskInfo.data.data.hasOwnProperty('isNew') && !metamaskInfo.data.data.isNew) ||
+          //     'isNew' in metamaskInfo.data.data === false
+          //   ) {
+          //     await web3.disconnect();
+          //     await web3.createWeb3Instance();
+          //     const signature = await handleShowMetaNotiToSign(accounts[0], metamaskInfo.data.data.nonce);
+          //     if (!signature) {
+          //       return;
+          //     }
+          //     countRef.current = 0;
+          //     reload();
+          //   }
+          // }
         } catch (error) {
           countRef.current = 0;
           console.log(error, 'error');

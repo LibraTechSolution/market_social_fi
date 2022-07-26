@@ -39,6 +39,18 @@
 .social-network {
   display: flex;
   column-gap: 32px;
+
+  a {
+    path {
+      fill: var(--gdf-grey-manatee);
+    }
+
+    &:hover {
+      path {
+        fill: var(--gdf-black);
+      }
+    }
+  }
 }
 
 .w-empty {

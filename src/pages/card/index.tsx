@@ -3,6 +3,11 @@ import Search from 'components/search';
 import SelectBox from 'components/dropdown/select';
 import Pagination from 'components/pagination';
 import CardNFT from 'modules/card-nft';
+import NFT01 from 'assets/images/nft/nft-01.png';
+import NFT02 from 'assets/images/nft/nft-02.png';
+import NFT03 from 'assets/images/nft/nft-03.png';
+import NFT04 from 'assets/images/nft/nft-04.png';
+import NFT05 from 'assets/images/nft/nft-05.png';
 import PerspectiveMatte from 'assets/images/icons/perspective_matte.svg';
 import ConfettiPerspectiveMatte from 'assets/images/icons/confetti_perspective_matte.svg';
 import classNames from 'classnames/bind';
@@ -71,11 +76,11 @@ const Card = () => {
           </div>
         </div>
         <div className={cx('list-cart-nft')}>
-          <CardNFT />
-          <CardNFT />
-          <CardNFT />
-          <CardNFT />
-          <CardNFT />
+          <CardNFT icon={NFT01} />
+          <CardNFT icon={NFT02} />
+          <CardNFT icon={NFT03} />
+          <CardNFT icon={NFT04} />
+          <CardNFT icon={NFT05} />
         </div>
         <Pagination page={1} totalPage={10} click={(page) => setQuery({ ...query, page })} />
       </section>
