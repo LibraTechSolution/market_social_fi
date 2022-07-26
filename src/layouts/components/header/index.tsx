@@ -10,7 +10,7 @@ import { ConnectWalletSteps, PersonalInfo } from 'utils/interfaces';
 import { navigateDisconnect } from 'utils/router/navigate-disconnect.route';
 import useWeb3 from 'hooks/useWeb3';
 import useClickOutside from 'hooks/useClickOutside';
-import useSessionStorage from 'hooks/useSessionStorage';
+import useLocalStorage from 'hooks/useLocalStorage';
 import ConnectWallet from 'modules/connect-wallet';
 import DisconnectWallet from 'modules/disconnect-wallet';
 import Menu from './Menu';
@@ -27,7 +27,7 @@ const Navbar = () => {
   const [connectWalletStep, setConnectWalletStep] = useState<ConnectWalletSteps>('init');
   const [showConnectWalletModal, setShowConnectWalletModal] = useState<boolean>(false);
   const [balance, setBalance] = useState<string>('');
-  const [personalInfo, setPersonalInfo] = useSessionStorage<PersonalInfo | null>('personal-info', null);
+  const [personalInfo, setPersonalInfo] = useLocalStorage<PersonalInfo | null>('personal-info', null);
   const [open, setOpen] = useState<boolean>(false);
   const countRef = useRef<number>(0);
   const ref = useRef<any>();

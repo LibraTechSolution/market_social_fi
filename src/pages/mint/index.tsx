@@ -5,7 +5,7 @@ import NFT03 from 'assets/images/nft/nft-03.png';
 import classNames from 'classnames/bind';
 import styles from './index.module.scss';
 import Button from 'components/button';
-import useSessionStorage from 'hooks/useSessionStorage';
+import useLocalStorage from 'hooks/useLocalStorage';
 import { PersonalInfo } from 'utils/interfaces';
 const cx = classNames.bind(styles);
 
@@ -17,7 +17,7 @@ interface IWhitelistQuery {
 
 const MintPage = () => {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
-  const [personalInfo] = useSessionStorage<PersonalInfo | null>('personal-info', null);
+  const [personalInfo] = useLocalStorage<PersonalInfo | null>('personal-info', null);
 
   const handleOpenModalMint = () => {
     setModalOpen(true);

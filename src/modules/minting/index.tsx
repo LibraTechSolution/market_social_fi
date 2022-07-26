@@ -7,7 +7,7 @@ import { toWei } from 'web3-utils';
 import { getMarketplaceProof } from 'api/mint';
 import { SC, MinScContract } from 'utils/smart-contract';
 import { formatThousand } from 'utils/functions';
-import useSessionStorage from 'hooks/useSessionStorage';
+import useLocalStorage from 'hooks/useLocalStorage';
 import PencilIcon from 'assets/images/icons/pencil.svg';
 import classNames from 'classnames/bind';
 import styles from './index.module.scss';
@@ -25,7 +25,7 @@ const MintModule = ({ isShowModal, closeModal }: Props) => {
   const marketHook = useMarket();
   const [quantity, setQuantity] = useState<number | string>('');
   const [touched, setTouched] = useState(0);
-  const [personalInfo] = useSessionStorage<PersonalInfo | null>('personal-info', null);
+  const [personalInfo] = useLocalStorage<PersonalInfo | null>('personal-info', null);
   const [process, setProcess] = useState<ProcessMintNftProps>(initProcess);
 
   const handleFocus = useCallback(() => {

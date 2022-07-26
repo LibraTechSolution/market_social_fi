@@ -1,14 +1,14 @@
 import { useCallback } from 'react';
 import useWeb3 from './useWeb3';
 import Big from 'big.js';
-import useSessionStorage from './useSessionStorage';
+import useLocalStorage from './useLocalStorage';
 import { PersonalInfo, SmartContractInterfaces } from 'utils/interfaces';
 import { SCAddresses } from 'utils/smart-contract';
 import { ERC_TOKEN } from 'utils/constant';
 
 const useMarket = () => {
   const { getContract, getContractOfNetwork } = useWeb3();
-  const [personalInfo] = useSessionStorage<PersonalInfo | null>('personal-info', null);
+  const [personalInfo] = useLocalStorage<PersonalInfo | null>('personal-info', null);
 
   const isApproveToken = useCallback(
     async ({
