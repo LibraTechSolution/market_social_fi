@@ -1,7 +1,11 @@
 {
   "/_app": "pages/_app.js",
-  "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
+  "/card": "pages/card.html",
+  "/demo/children": "pages/demo/children.html",
+  "/demo": "pages/demo.html",
   "/": "pages/index.html",
+  "/mint": "pages/mint.html",
+  "/_error": "pages/_error.js",
   "/404": "pages/404.html"
 }

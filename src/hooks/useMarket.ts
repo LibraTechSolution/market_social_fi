@@ -56,10 +56,10 @@ const useMarket = () => {
         contract: getContract(contractMarket, token),
         contractCurrentNetwork: getContractOfNetwork(contractMarket, token),
         address: contractMarket.contractAddress,
-        account: personalInfo?.user?.address || '',
+        account: personalInfo?.walletAddress || '',
       };
     },
-    [getContract, getContractOfNetwork, personalInfo?.user?.address],
+    [getContract, getContractOfNetwork, personalInfo?.walletAddress],
   );
 
   const takeOrderMarketplace = useCallback(
