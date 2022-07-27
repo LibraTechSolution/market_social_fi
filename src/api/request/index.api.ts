@@ -1,5 +1,5 @@
 import axios, { AxiosError } from 'axios';
-import { getFromSession } from 'utils/functions';
+import { getFromLocalStorage } from 'utils/functions';
 import { PersonalInfo } from 'utils/interfaces';
 import { ErrorResponse } from './index.interface';
 
@@ -22,7 +22,7 @@ export const geckoRequest = axios.create({
 });
 
 requestWithJwt.interceptors.request.use(async (config) => {
-  const personalInfo: PersonalInfo = getFromSession('personal-info');
+  const personalInfo: PersonalInfo = getFromLocalStorage('personal-info');
 
   return {
     ...config,

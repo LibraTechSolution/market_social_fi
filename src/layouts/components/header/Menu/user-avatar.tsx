@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useRef, useS
 import useWeb3 from 'hooks/useWeb3';
 import useClickOutside from 'hooks/useClickOutside';
 import useLocalStorage from 'hooks/useLocalStorage';
-import { dotsSensitive } from 'utils/functions';
+import { dotsSensitive, roundingNumber } from 'utils/functions';
 import { CURRENCY_UNIT_NAME } from 'utils/constant';
 import { PersonalInfo } from 'utils/interfaces';
 import Image from 'next/image';
@@ -12,7 +12,7 @@ import Button from 'components/button';
 import ButtonArea from './button-area';
 import classNames from 'classnames/bind';
 import styles from './user-avatar.module.scss';
-import BinanceSVG from 'assets/images/icons/binance.svg';
+import Matic from 'assets/images/crypto-currency/matic.svg';
 import UserProfileSvg from 'assets/images/icons/userMyProfile.svg';
 import SignOutSvg from 'assets/images/icons/signOutSvg.svg';
 const cx = classNames.bind(styles);
@@ -94,17 +94,17 @@ const UserAvatar = ({
                   })}
               </span>
             </div>
-            <Button className={cx('button-change')} onClick={handleChangeWallet}>
-              Change
-            </Button>
+            {/*<Button className={cx('button-change')} onClick={handleChangeWallet}>*/}
+            {/*  Change*/}
+            {/*</Button>*/}
           </div>
           <div className={cx('content')}>
             <div className={cx('balance')}>
               <div className={cx('title')}>Balance</div>
               <div className={cx('number-binance')}>
-                <BinanceSVG />
+                <Matic />
                 <span>
-                  {balance || 0} {CURRENCY_UNIT_NAME.MATIC}
+                  {roundingNumber(balance) || 0} {CURRENCY_UNIT_NAME.MATIC}
                 </span>
               </div>
             </div>
