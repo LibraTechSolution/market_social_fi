@@ -29,3 +29,21 @@
   padding: 80px 0 64px;
   width: 100%;
 }
+
+.scroll-top-top {
+  cursor: pointer;
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  right: 40px;
+  bottom: 40px;
+  width: 56px;
+  height: 56px;
+  border: none;
+  outline: none;
+  border-radius: 50%;
+  background: var(--gdf-purple-medium) !important;
+  transition: opacity 1s ease-in-out;
+  z-index: 999 !important;
+}

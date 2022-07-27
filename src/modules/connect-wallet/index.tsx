@@ -14,6 +14,7 @@ import FailSvg from 'assets/images/icons/fail.svg';
 import { navigateDisconnect } from 'utils/router/navigate-disconnect.route';
 import { useRouter } from 'next/router';
 import { isEmpty } from 'utils/functions';
+import Input from 'components/input';
 import Modal from 'components/modal';
 import Button from 'components/button';
 import classNames from 'classnames/bind';
@@ -51,7 +52,6 @@ const ConnectWallet = ({
   const [step, setStep] = useState<ConnectWalletSteps>('init');
   const [isWalletConnect, setIsWalletConnect] = useState<boolean>(false);
   const [userInfo, setUserInfo] = useState({
-    email: '',
     username: '',
   });
   const router = useRouter();
@@ -67,18 +67,14 @@ const ConnectWallet = ({
 
   const validateUserInfo = useCallback(() => {
     const errors: any = {};
-    const emailRegex = /^[\w-\._]+@([\w-]+\.)+[\w-]{2,4}$/g;
     const usernameRegex = /^[\w-\._]+$/g;
-    if (!emailRegex.test(userInfo.email) && userInfo.email.length > 0) {
-      errors.email = errors.email ? errors.email.push(ERRORS.E1) : [ERRORS.E1];
-    }
 
     if (!usernameRegex.test(userInfo.username) && userInfo.username.length > 0) {
       errors.username = errors.username ? errors.username.push(ERRORS.E12) : [ERRORS.E12];
     }
 
-    if (userInfo.email.length > 256) {
-      errors.email = errors.email ? [...errors.email, ERRORS.E3('Email', 256)] : [ERRORS.E3('Email', 256)];
+    if (userInfo.username.length >= 0 && userInfo.username.length <= 6) {
+      errors.username = errors.username ? [...errors.username, ERRORS.E2('Username', 6)] : [ERRORS.E3('Username', 6)];
     }
 
     if (userInfo.username.length > 256) {
@@ -98,23 +94,14 @@ const ConnectWallet = ({
     }
 
     try {
-      const form = new FormData();
-      form.append('username', userInfo.username);
-      form.append('email', userInfo.email);
-
-      const response: any = await updateUser(form);
+      await updateUser({ username: userInfo.username });
       const updatedInfo = {
         ...personalInfo,
-        user: response.data.data,
+        username: userInfo.username,
       } as PersonalInfo;
       setPersonalInfo(updatedInfo);
     } catch (error: any) {
       if (error.errors && error.errors.message) {
-        if (error.errors.message.search('Email') > -1) {
-          validateErrors.email = validateErrors.email
-            ? [...validateErrors.email, ERRORS.E0('Email')]
-            : [ERRORS.E0('Email')];
-        }
         if (error.errors.message.search('Username') > -1) {
           validateErrors.username = validateErrors.username
             ? [...validateErrors.username, ERRORS.E0('Username')]
@@ -123,7 +110,7 @@ const ConnectWallet = ({
       }
     }
     isEmpty(validateErrors) ? closeModal() : setErrors(validateErrors);
-  }, [closeModal, personalInfo, setPersonalInfo, userInfo.email, userInfo.username, validateUserInfo]);
+  }, [closeModal, personalInfo, setPersonalInfo, userInfo.username, validateUserInfo]);
 
   const handleLogin = useCallback(async (walletAddress: string, signature: string) => {
     try {
@@ -172,9 +159,15 @@ const ConnectWallet = ({
         return;
       }
 
+      if (!personalInfo?.data?.username) {
+        setUserInfo({ username: '' });
+        setStep('update-profile');
+      } else {
+        closeModal();
+      }
+
       setPersonalInfo(personalInfo.data);
 
-      closeModal();
       setIsWalletConnectConnectedBefore(false);
       web3.setChangeWalletRef('empty');
       connectSuccessCb?.();
@@ -283,15 +276,12 @@ const ConnectWallet = ({
 
       setPersonalInfo(personalInfo.data);
 
-      // TODO: Pending register when username empty
-      // if (metamaskInfo.data.data.isNew) {
-      //   setUserInfo({ email: '', username: '' });
-      //   setStep('update-profile');
-      // } else {
-      //   closeModal();
-      // }
-
-      closeModal();
+      if (!personalInfo?.username) {
+        setUserInfo({ username: '' });
+        setStep('update-profile');
+      } else {
+        closeModal();
+      }
 
       setIsChangeWallet(false);
       setIsWalletConnectConnectedBefore(true);
@@ -358,13 +348,13 @@ const ConnectWallet = ({
           disabled={isChangeWallet && !isWalletConnectConnectedBefore}
           className={cx('init-button', { active: isChangeWallet && !isWalletConnectConnectedBefore })}
         />
-        <Button
-          onClick={handleConnectWallet}
-          rightIcon={<Image src={WalletConnectPng} alt="icon" width={40} height={40} />}
-          leftIcon={<span className="label">WalletConnect</span>}
-          disabled={isChangeWallet && isWalletConnectConnectedBefore}
-          className={cx('init-button', { active: isChangeWallet && isWalletConnectConnectedBefore })}
-        />
+        {/*<Button*/}
+        {/*  onClick={handleConnectWallet}*/}
+        {/*  rightIcon={<Image src={WalletConnectPng} alt="icon" width={40} height={40} />}*/}
+        {/*  leftIcon={<span className="label">WalletConnect</span>}*/}
+        {/*  disabled={isChangeWallet && isWalletConnectConnectedBefore}*/}
+        {/*  className={cx('init-button', { active: isChangeWallet && isWalletConnectConnectedBefore })}*/}
+        {/*/>*/}
       </div>
     );
   }, [handleConnectWallet, handleClickWalletConnect, isChangeWallet, isWalletConnectConnectedBefore]);
@@ -412,8 +402,42 @@ const ConnectWallet = ({
   }, []);
 
   const updateProfileStep = useMemo(() => {
-    return <></>;
-  }, [closeModal, handleUpdateProfile, userInfo.email, userInfo.username, setErrors, errors]);
+    return (
+      <>
+        <div className={cx('wrapper')}>
+          <div className="gdf-title">Update your profile</div>
+          <div className={cx('group-input')}>
+            <div className="input-label">Username</div>
+            <Input
+              className={cx('')}
+              placeholder="Please enter your username"
+              value={userInfo.username}
+              onChange={(e) => {
+                const username = e.target.value.replace(removeWhiteSpaceRegxp, '');
+                setErrors((prev) => ({ ...prev, username: [] }));
+                setUserInfo((prev) => ({ ...prev, username }));
+              }}
+            />
+            {errors && errors.username && (
+              <div className={cx('error-alert')}>
+                {errors.username.map((error: string, idx: number) => (
+                  <span key={idx}>{error}</span>
+                ))}
+              </div>
+            )}
+          </div>
+          <div className={cx('group-action')}>
+            <Button className={cx('btn-skip')} onClick={closeModal}>
+              Skip
+            </Button>
+            <Button className={cx('btn-update')} onClick={handleUpdateProfile}>
+              Update
+            </Button>
+          </div>
+        </div>
+      </>
+    );
+  }, [closeModal, handleUpdateProfile, userInfo.username, setErrors, errors]);
 
   const wrongNetworkStep = useMemo(() => {
     return (
@@ -455,6 +479,7 @@ const ConnectWallet = ({
       close={closeModal}
       content={connectSteps[step]}
       preventClickOutside={true}
+      showCloseBtn={step !== 'connecting-to-metamask' && step !== 'update-profile' && step !== 'wrong-network'}
       className={cx('module-connect', step)}
     />
   );

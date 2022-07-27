@@ -23,8 +23,8 @@ export const logout = (params: LogoutRequestBody): Promise<AxiosResponse> => {
 };
 
 // Use in my profile page
-export const updateUser = (params: FormData): Promise<AxiosResponse<UpdateProfileResponse>> => {
-  return requestWithJwt.put<GetUserDetailResponse>(`/user`, params);
+export const updateUser = (params: any): Promise<AxiosResponse<UpdateProfileResponse>> => {
+  return requestWithJwt.post<GetUserDetailResponse>(`/user/register_final`, params);
 };
 
 export const verifySignedMessage = (params: LoginRequestBody): Promise<AxiosResponse<any>> => {

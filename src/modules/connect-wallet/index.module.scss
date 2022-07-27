@@ -110,6 +110,48 @@
   animation: spinning 1500ms linear infinite;
 }
 
+.group-input {
+  display: flex;
+  flex-direction: column;
+  row-gap: 14px;
+  width: 100%;
+}
+
+.group-action {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  column-gap: 12px;
+  margin-top: 16px;
+
+  .btn-skip {
+    width: 100%;
+    background-color: var(--gdf-white);
+    border: 1px solid var(--gdf-blue-ghost);
+
+    &:hover {
+      opacity: 0.6;
+      color: var(--gdf-white);
+      background-color: var(--gdf-grey-manatee);
+    }
+  }
+
+  .btn-update {
+    width: 100%;
+    background-color: var(--gdf-purple-medium);
+    color: var(--gdf-white);
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+}
+
+.error-alert {
+  font: var(--font-heading-9);
+  color: var(--gdf-red);
+}
+
 @keyframes spinning {
   from {
     transform: rotate(0deg);
