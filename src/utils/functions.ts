@@ -91,9 +91,11 @@ export const formatThousand = (price: string) => {
 
 export const roundingNumber = (amount: string, currency?: string, isAfter = true, decimal = 4) => {
   try {
-    const value = toFormat(Big(amount), decimal, true);
-    if (!currency) return value;
-    return isAfter ? `${value}${currency}` : `${currency}${value}`;
+    if (Number(amount) > 0) {
+      const value = toFormat(Big(amount), decimal, true);
+      if (!currency) return value;
+      return isAfter ? `${value}${currency}` : `${currency}${value}`;
+    }
   } catch (err) {
     return '';
   }
