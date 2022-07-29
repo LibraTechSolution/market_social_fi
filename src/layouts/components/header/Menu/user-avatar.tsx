@@ -20,6 +20,7 @@ const cx = classNames.bind(styles);
 const UserAvatar = ({
   setConnectWalletStep,
   balance,
+  isChangeNetwork,
   setShowDisconnectWalletModal,
   setShowConnectWalletModal,
   setIsChangeWallet,
@@ -27,6 +28,7 @@ const UserAvatar = ({
 }: {
   setConnectWalletStep: any;
   balance: string;
+  isChangeNetwork: boolean;
   setShowDisconnectWalletModal: Dispatch<SetStateAction<boolean>>;
   setShowConnectWalletModal: Dispatch<SetStateAction<boolean>>;
   setIsChangeWallet: Dispatch<SetStateAction<boolean>>;
@@ -70,7 +72,7 @@ const UserAvatar = ({
 
   useClickOutside(ref, () => setOpen(false));
 
-  if (personalInfo) {
+  if (personalInfo && !isChangeNetwork) {
     const address = personalInfo?.walletAddress;
     return (
       <div ref={ref} className={cx('menu-item-dropdown')}>

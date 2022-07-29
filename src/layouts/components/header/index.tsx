@@ -12,6 +12,7 @@ import useWeb3 from 'hooks/useWeb3';
 import useClickOutside from 'hooks/useClickOutside';
 import useLocalStorage from 'hooks/useLocalStorage';
 import ConnectWallet from 'modules/connect-wallet';
+import ChangeNetwork from 'modules/change-network';
 import DisconnectWallet from 'modules/disconnect-wallet';
 import Menu from './Menu';
 import UserAvatar from './Menu/user-avatar';
@@ -22,6 +23,7 @@ const Navbar = () => {
   const router = useRouter();
   const { reload } = router;
   const [isChangeWallet, setIsChangeWallet] = useState<boolean>(false);
+  const [isChangeNetwork, setIsChangeNetwork] = useState<boolean>(false);
   const [showDisconnectWalletModal, setShowDisconnectWalletModal] = useState<boolean>(false);
   const [isWalletConnectConnectedBefore, setIsWalletConnectConnectedBefore] = useState<boolean>(false);
   const [connectWalletStep, setConnectWalletStep] = useState<ConnectWalletSteps>('init');
@@ -157,6 +159,7 @@ const Navbar = () => {
           <Menu />
           <UserAvatar
             balance={balance}
+            isChangeNetwork={isChangeNetwork}
             setConnectWalletStep={setConnectWalletStep}
             setShowConnectWalletModal={setShowConnectWalletModal}
             setShowDisconnectWalletModal={setShowDisconnectWalletModal}
@@ -178,6 +181,7 @@ const Navbar = () => {
             setIsChangeWallet={setIsChangeWallet}
             setIsWalletConnectConnectedBefore={setIsWalletConnectConnectedBefore}
           />
+          {personalInfo && <ChangeNetwork isChangeNetwork={isChangeNetwork} setIsChangeNetwork={setIsChangeNetwork} />}
         </div>
       </div>
     </header>
