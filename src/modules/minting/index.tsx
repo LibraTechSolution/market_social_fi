@@ -43,7 +43,7 @@ const MintModule = ({ isShowModal, closeModal }: Props) => {
   const handleChangeQuantity = useCallback((e: any) => setQuantity(e.target.value.replace(/,/g, '')), []);
 
   const handleMint = useCallback(
-    (hookFunction: typeof marketHook) => {
+    async (hookFunction: typeof marketHook) => {
       if (personalInfo) {
         const marketMint = hookFunction.createMarket({
           contractAddress: MinScContract.ERC721.address,
@@ -55,16 +55,20 @@ const MintModule = ({ isShowModal, closeModal }: Props) => {
         //const payablePrice = (Number(ethers.utils.parseEther('0.5')) * Number(quantity)).toString();
         getMarketplaceProof(address).then(async (res) => {
           const markleProof = res?.data?.data?.proof;
-          await marketHook
-            .mint({
-              market: marketMint,
-              markleProof,
-              mintAmount: quantity,
-              targetPrice: payablePrice,
-            })
-            .then((res) => {
-              setProcess((pre) => ({ ...pre, isLoadingMint: false }));
-            });
+          if (markleProof) {
+            await marketHook
+              .mint({
+                market: marketMint,
+                markleProof,
+                mintAmount: quantity,
+                targetPrice: payablePrice,
+              })
+              .then((res) => {
+                setProcess((pre) => ({ ...pre, isLoadingMint: false }));
+              });
+          } else {
+            // Message error
+          }
         });
       }
     },
@@ -75,7 +79,7 @@ const MintModule = ({ isShowModal, closeModal }: Props) => {
     return (
       <div className={cx('wrapper')}>
         <div className="gdf-title">Mint</div>
-        <div className="gdf-desc">
+        <div className={cx('group-input')}>
           <Input
             value={formatThousand(quantity.toString())}
             onKeyPress={handleKeyPress}

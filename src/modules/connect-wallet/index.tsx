@@ -427,9 +427,6 @@ const ConnectWallet = ({
             )}
           </div>
           <div className={cx('group-action')}>
-            <Button className={cx('btn-skip')} onClick={closeModal}>
-              Skip
-            </Button>
             <Button className={cx('btn-update')} onClick={handleUpdateProfile}>
               Update
             </Button>
@@ -479,7 +476,7 @@ const ConnectWallet = ({
       close={closeModal}
       content={connectSteps[step]}
       preventClickOutside={true}
-      showCloseBtn={step !== 'connecting-to-metamask' && step !== 'update-profile' && step !== 'wrong-network'}
+      showCloseBtn={step !== 'connecting-to-metamask' && step !== 'wrong-network'}
       className={cx('module-connect', step)}
     />
   );
