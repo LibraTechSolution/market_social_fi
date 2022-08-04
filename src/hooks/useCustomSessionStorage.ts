@@ -1,17 +1,14 @@
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { parseJSON } from "utils/functions";
-import useEventListener from "./useEvenListener";
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { parseJSON } from 'utils/functions';
+import useEventListener from './useEvenListener';
 
 type SetValue<T> = Dispatch<SetStateAction<T>>;
 
-const useCustomSessionStorage = <T>(
-  key: string,
-  initialValue = null,
-): [T | null, SetValue<T | null>] => {
+const useCustomSessionStorage = <T>(key: string, initialValue = null): [T | null, SetValue<T | null>] => {
   // Get from session storage then parse stored json or return initialValue
   const readValue = (): T | null => {
     // Prevent build error "window is undefined"
-    if (typeof window === "undefined") {
+    if (typeof window === 'undefined') {
       return initialValue;
     }
 
@@ -24,7 +21,7 @@ const useCustomSessionStorage = <T>(
     }
   };
 
-  // State to store our value
+  // State to stores our value
   // Pass initial state function to useState so logic is only executed once
   const [storedValue, setStoredValue] = useState<T | null>(initialValue);
 
@@ -32,10 +29,8 @@ const useCustomSessionStorage = <T>(
   // ... persists the new value to sessionStorage.
   const setValue: SetValue<T | null> = (value) => {
     // Prevent build error "window is undefined"
-    if (typeof window == "undefined") {
-      console.warn(
-        `Tried setting sessionStorage key “${key}” even though environment is not a client`,
-      );
+    if (typeof window == 'undefined') {
+      console.warn(`Tried setting sessionStorage key “${key}” even though environment is not a client`);
     }
 
     try {
@@ -49,7 +44,7 @@ const useCustomSessionStorage = <T>(
       setStoredValue(newValue);
 
       // We dispatch a custom event so every useSessionStorage hook are notified
-      window.dispatchEvent(new Event("session-storage"));
+      window.dispatchEvent(new Event('session-storage'));
     } catch (error) {
       console.warn(`Error setting sessionStorage key “${key}”:`, error);
     }
@@ -65,10 +60,10 @@ const useCustomSessionStorage = <T>(
   };
 
   // this only works for other documents, not the current one
-  useEventListener("storage", handleStorageChange);
+  useEventListener('storage', handleStorageChange);
 
   // this is a custom event, triggered in writeValueToSessionStorage
-  useEventListener("session-storage", handleStorageChange);
+  useEventListener('session-storage', handleStorageChange);
 
   return [storedValue, setValue];
 };

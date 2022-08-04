@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { ReactElement, useState } from 'react';
+import Layout from 'layouts';
 import Search from 'components/search';
 import SelectBox from 'components/dropdown/select';
 import Pagination from 'components/pagination';
@@ -86,6 +87,10 @@ const Card = () => {
       </section>
     </>
   );
+};
+
+Card.getLayout = function getLayout(page: ReactElement) {
+  return <Layout isBackgroundContent={true}>{page}</Layout>;
 };
 
 export default Card;

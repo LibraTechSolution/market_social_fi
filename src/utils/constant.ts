@@ -21,6 +21,13 @@ export const ERRORS = {
   E12: 'Please enter a valid username address.',
 };
 
+export enum MESSAGE_STATUS {
+  INFO = 'INFO',
+  SUCCESS = 'SUCCESS',
+  WARNING = 'WARNING',
+  DANGER = 'DANGER',
+}
+
 export const METAMASK_DOWNLOAD_LINK = 'https://metamask.io/download.html';
 
 export const ERC_TOKEN = {
@@ -45,9 +52,18 @@ export const MAX_LOGO_FILE_SIZE = 1024 * 1024 * 3; // 3Mb
 export const MAX_BANNER_FILE_SIZE = 1024 * 1024 * 10; // 10Mb
 
 export const CURRENCY_NAME: CurrencyName = {
-  BNB: 'binancecoin',
-  WETH: 'weth',
-  BUSD: 'binance-usd',
+  // BNB: 'binancecoin',
+  // WETH: 'weth',
+  // BUSD: 'binance-usd',
+  MATIC: 'MATIC',
+};
+
+export const NFT_DETAIL_STATUSES = {
+  OFF_SALE: 'Off Sale',
+  PROCESSING: 'Processing',
+  BUY_NOW: 'Buy Now',
+  ON_SALE: 'On Sale',
+  SOLD_OUT: 'Sold Out',
 };
 
 export const CURRENCY_UNIT_NAME = {

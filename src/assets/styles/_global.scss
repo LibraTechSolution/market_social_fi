@@ -49,6 +49,22 @@
   font: var(--font-heading-8);
 }
 
+.gdf-heading-9 {
+  font: var(--font-heading-9);
+}
+
+.gdf-heading-10 {
+  font: var(--font-heading-10);
+}
+
+.gdf-heading-11 {
+  font: var(--font-heading-11);
+}
+
+.gdf-heading-12 {
+  font: var(--font-heading-12);
+}
+
 .gdf-flex-center {
   display: flex;
   justify-content: space-between;
@@ -64,4 +80,10 @@
   font: var(--font-heading-2);
   text-align: center;
   color: var(--gdf-grey-manatee);
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
 }

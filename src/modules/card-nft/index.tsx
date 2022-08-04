@@ -16,7 +16,7 @@ interface Props {
 const CardNFT = ({ icon }: Props) => {
   return (
     <article className={cx('nft-item')}>
-      <Link href={'/'} passHref>
+      <Link href={'/marketplace/nft/6987881a-13a1-11ed-861d-0242ac120002'} passHref>
         <a>
           <div className={cx('heart-icon')}>
             <div className={cx('heart-block')}>
