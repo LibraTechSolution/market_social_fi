@@ -10,10 +10,11 @@ import styles from './index.module.scss';
 const cx = classNames.bind(styles);
 
 interface Props {
+  isBackgroundContent?: boolean;
   children?: ReactNode;
 }
 
-const Layout = ({ children }: Props) => {
+const Layout = ({ isBackgroundContent = false, children }: Props) => {
   return (
     <div className="gdf-wrapper">
       <HeadApp />
@@ -21,7 +22,7 @@ const Layout = ({ children }: Props) => {
       <Header />
       <main className={cx('wrapper')}>
         <div className={cx('inner')}>
-          <BackgroundBannerCard />
+          {isBackgroundContent && <BackgroundBannerCard />}
           <section className={cx('content')}>{children}</section>
         </div>
       </main>

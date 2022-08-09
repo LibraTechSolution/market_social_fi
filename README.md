@@ -13,7 +13,7 @@ Root path: src/
 src
 ├── api
 │   └── <api-name>
-│       ├── index.api.ts
+│       ├── index.ts
 │       └── index.interface.ts
 ├── assets
 │   ├── fonts
